@@ -1,5 +1,6 @@
 package com.akash.walletapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -36,6 +38,10 @@ public class Wallet {
     private Integer priority; // 1 = high, 2=Medium, 3=Low
 
     private Double currentBalance;
+
+    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "wallet", orphanRemoval = true)
+    @JsonIgnore
+    private List<Transaction> transactionList;
 
     @PrePersist
     public void setBalance(){
