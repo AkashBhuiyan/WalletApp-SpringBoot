@@ -23,10 +23,22 @@ public class TransactionService {
 
         if (wallet.isPresent()){
             transaction.setWallet(wallet.get());
+
+            Double balance = 0.0;
+            if (transaction.getType()==1){
+                balance = wallet.get().getCurrentBalance()+ transaction.getAmount();
+            } else if(transaction.getType()==2 && wallet.get().getCurrentBalance()>=transaction.getAmount()){
+                balance = wallet.get().getCurrentBalance() - transaction.getAmount();
+            }
+            wallet.get().setCurrentBalance(balance);
+
             if(transaction.getId()==null){
                 transactionRepository.save(transaction);
+                walletRepository.save(wallet.get());
+
             } else {
                 transactionRepository.save(transaction);
+                walletRepository.save(wallet.get());
             }
 
             return transaction;
